@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+  <!-- 1.数据源 -->
+  <bean name="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+     <!-- 四要素 -->
+     <property name="driverClass" value="org.gjt.mm.mysql.Driver"></property>
+     <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/school"></property>
+     <property name="user" value="root"></property>
+     <property name="password" value="123456"></property>
+  </bean>
+  
+  <!-- 2.Mybatis使用数据源,而且将对象交给Spring容器管理 -->
+  <!-- 会话工厂 -->
+  <!-- 会话工厂代管了将原来mybatis-config的所有配置 -->
+  <bean name="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+     <!-- 数据源 -->
+     <property name="dataSource" ref="dataSource"></property>
+     <!-- 映射文件,加载 mybatis-mapper,Mapper.xml结尾的所有配置文件-->
+     <property name="mapperLocations" value="classpath:mybatis-mapper/*Mapper.xml"> </property>
+     <!-- 别名 -->
+     <property name="typeAliasesPackage" value="cn.itheima.entity"></property>
+     <!-- 这个属性可以加载mybatis-config的配置,注意一定要删除mybatis-config配置数据源 -->
+<!--      <property name="configLocation" value="mybatis-config.xml"></property> -->
+  </bean>
+  
+  <!-- 使用mybatis-spring插件提供的扫描器,将操作接口的对象注入到Spring容器 -->
+  <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+     <!-- 配置使用的会话工厂 -->
+     <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+     <!-- 注入的接口放在哪个包 -->
+     <property name="basePackage" value="cn.itheima.mapper"></property>
+  </bean>
+  
+  <!-- 3.事务代理 -->
+  <bean name="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+     <!-- 事务代理代理的数据源 -->
+     <property name="dataSource" ref="dataSource"></property>
+  </bean>
+  <!-- 启动编程方式的事务代理,使用注解的方式的事务代理 -->
+  <tx:annotation-driven transaction-manager="transactionManager"/>
+</beans>

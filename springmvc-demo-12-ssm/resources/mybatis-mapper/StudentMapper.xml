@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="cn.itheima.mapper.StudentMapper">
+
+   <!-- 插入数据 -->
+   <insert id="insert">
+      INSERT INTO student	(AID, SNAME, SEX, BIRTHDAY, AGE)	VALUES (#{aid}, #{sname}, #{sex}, #{birthday}, #{age})
+   </insert>
+   
+   <!-- 获得学生表的所有数据 -->
+   <select id="findAll" resultType="Student">
+     SELECT *	FROM student
+   </select>
+
+</mapper>

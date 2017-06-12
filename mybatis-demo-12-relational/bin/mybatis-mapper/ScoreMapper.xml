@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="cn.itheima.mapper.ScoreMapper">
+
+  <resultMap type="cn.itheima.pojo.Score" id="scoreResultMap" autoMapping="true">
+     <!-- 多表查询ID,必须显示声明 -->
+     <id property="scoreId" column="SCORE_ID"/>
+     
+     <!-- 一个学生的成绩,只可能属于一个学生<association> -->
+     <!-- 
+     property:POJO的属性
+     javaType:表示的引用的类型[可选]
+     column:外键的字段名,
+      -->
+     <association property="student" javaType="cn.itheima.pojo.Student" column="SID" select="selectStudentBySid">
+     
+     </association>
+  
+  </resultMap>
+  <!-- 这个查询的语句的条件参数一定是外键的字段 -->
+  <select resultType="cn.itheima.pojo.Student" id="selectStudentBySid">
+   SELECT * FROM student WHERE SID=#{sid}
+  </select>
+
+  <select resultMap="scoreResultMap" id="selectById">
+    SELECT *	FROM score WHERE SCORE_ID=#{scoreId}
+  </select>
+  
+  <!-- 是被StudentMapper调用的操作 -->
+   <select resultType="cn.itheima.pojo.Score" id="selectScoreBySid">
+     SELECT *	FROM score WHERE SID=#{sid}
+   </select>
+   
+   
+   <resultMap type="cn.itheima.pojo.Score" id="resultScoreMap" autoMapping="true">
+     <id property="scoreId" column="SCORE_ID"/>
+
+   
+     <!-- 一个学生分数对应一个学生 -->
+     <association property="student" javaType="cn.itheima.pojo.Student"  autoMapping="true">
+         <id property="sid" column="SID"/>
+         <result property="sname" column="SNAME" />
+         
+     </association>
+   
+   </resultMap>
+   
+   <select resultMap="resultScoreMap" id="selectScoreAndStudent" >
+     select * from score,student where score.SID=student.SID;
+   </select>
+  
+ 
+</mapper>

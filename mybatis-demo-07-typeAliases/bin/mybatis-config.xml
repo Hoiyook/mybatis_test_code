@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "mybatis-3-config.dtd" >
+<configuration>
+
+
+  <!-- 声明别名 -->
+  <!-- 方式1 -->
+  <typeAliases>
+    <!-- 表示给cn.itheima.pojo.Student设置了一个 Student别名,所以在映射文件使用Student就等同使用了cn.itheima.pojo.Student-->
+<!--     <typeAlias type="cn.itheima.pojo.Student" alias="Student"/> -->
+    <!-- 表示如果放在cn.itheima.pojo下的类,会自动忽略包名 -->
+    <!-- 意思就是cn.itheima.pojo.Student这个类忽略cn.itheima.pojo.,等于Student -->
+    <package name="cn.itheima.pojo" />
+  </typeAliases>
+  <environments default="school_mysql">
+    <environment id="school_mysql">
+      <transactionManager type="JDBC"></transactionManager>
+      <dataSource type="POOLED">
+        <property name="driver" value="org.gjt.mm.mysql.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/school"/>
+        <property name="username" value="root"/>
+        <property name="password" value="123456"/>
+      </dataSource>
+    
+    </environment>
+  
+  </environments>
+  
+  
+  <!-- 映射文件 -->
+
+  <mappers>
+    <!-- 映射文件一定要加载才能使用 -->
+    <mapper resource="mybatis-mapper/StudentMapper.xml"/>
+  </mappers>
+
+
+</configuration>

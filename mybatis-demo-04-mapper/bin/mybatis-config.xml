@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "mybatis-3-config.dtd" >
+<configuration>
+
+  <!-- 任何框架,所有的静态属性都可以在它的代码里面找到相对应的声明. -->
+  <!-- 任何框架, 属性都会对应用一个set方法-->
+
+  <!-- 数据源 -->
+  <!-- 可以配置多个数据源 -->
+  <!-- 
+  default:如果配置了多个数据源,默认使用哪个
+   -->
+  <environments default="school_mysql">
+   
+    <environment id="school_mysql">
+      <!-- 配置事务类型 Configuration-->
+      <!-- 
+          typeAliasRegistry.registerAlias("JDBC", JdbcTransactionFactory.class);
+          typeAliasRegistry.registerAlias("MANAGED", ManagedTransactionFactory.class);
+          JDBC:使用JDBC事务
+          MANAGED:不使用事务
+       -->
+      
+      <transactionManager type="JDBC"></transactionManager>
+      <!-- 配置数据源 -->
+<!--           typeAliasRegistry.registerAlias("JNDI", JndiDataSourceFactory.class); -->
+<!--     typeAliasRegistry.registerAlias("POOLED", PooledDataSourceFactory.class); -->
+<!--     typeAliasRegistry.registerAlias("UNPOOLED", UnpooledDataSourceFactory.class); -->
+     <!-- 
+     JNDI:使用WEB服务器的数据源
+     POOLED:内置的连接池
+     UNPOOLED:不使用连接池,直连
+      -->
+      <dataSource type="POOLED">
+        <property name="driver" value="org.gjt.mm.mysql.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/school"/>
+        <property name="username" value="root"/>
+        <property name="password" value="123456"/>
+      </dataSource>
+    
+    </environment>
+  
+  </environments>
+  
+  
+  <!-- 映射文件 -->
+
+  <mappers>
+    <!-- 映射文件一定要加载才能使用 -->
+    <mapper resource="mybatis-mapper/StudentMapper.xml"/>
+  </mappers>
+
+
+</configuration>

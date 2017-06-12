@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<!-- 
+1.使用DAO方式
+namespace:命名空间就是一个文件的标识符,只有符合标识符的规则,可以随便写
+2.使用Mapper方式
+(1).namespace:必须是映射的接口全名
+(2).操作的id必须和接口的方法名一一对应
+ -->
+<mapper namespace="cn.itheima.mapper.StudentMapper">
+
+  <!-- 插入操作 -->
+  <!-- 
+   id:是操作的标识符,只有符合标识符的规则,可以随便写
+   
+     操作标签:insert\delete\update\select都有一个parameterType
+   Mybatis默认情况,如果不设置parameterType,操作会自动识别操作方法的参数类型.
+   如果设置了parameterType属性,会强制验证操作方法的类型
+   -->
+  <insert id="insert" parameterType="map">
+    <!-- 
+    mybatis支持通过实体对象传递参数,参数的使用#{}来获得,
+    获得规则为:
+    #{}里面的值,要和实体对象的set\get方法一一对应, 如: sname 对应实体类的setSname()和getSname
+     -->
+    INSERT INTO student	(SNAME, AGE, BIRTHDAY, SEX)	VALUES (#{sname}, #{age}, #{birthday}, #{sex})
+  </insert>
+  
+  <!-- 删除 -->
+  <delete id="deleteById">
+    DELETE FROM student WHERE SID=#{sid}
+  </delete>
+  
+  <!-- 更新 -->
+  <update id="updateAllById">
+   UPDATE student	SET	SNAME=#{sname},	AGE=#{age},	BIRTHDAY=#{birthday},SEX=#{sex}	WHERE  SID=#{sid}
+  </update>
+  
+  <resultMap type="cn.itheima.pojo.Student" id="studentMap">
+    
+   <!-- 数据库字段和实体类的属性的关系 -->
+   <!-- 主键 -->
+   <id column="SID" property="sid"/>
+   <!-- 属性 -->
+   <!-- 将数据库的字段和实体类的属性关联 -->
+   <result column="SNAME" javaType="String" jdbcType="VARCHAR"  property="studentName"/>
+   <result column="SEX" property="sex"/>
+   <result column="AGE" property="age"/>
+   <result column="BIRTHDAY" property="birthday"/>
+  
+  </resultMap>
+  
+  <!-- 查询 -->
+  <!-- 查询必须指定返回的类型 -->
+  <!-- 
+    使用resultType指定,记录元素的类型
+   -->
+  <select resultMap="studentMap" id="selectAll">
+    SELECT *	FROM student
+  </select>
+  
+</mapper>

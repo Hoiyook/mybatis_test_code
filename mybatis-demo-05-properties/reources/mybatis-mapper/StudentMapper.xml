@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<!-- 
+namespace:命名空间就是一个文件的标识符,只有符合标识符的规则,可以随便写
+
+ -->
+<mapper namespace="studentDAO">
+
+  <!-- 插入操作 -->
+  <!-- 
+   id:是操作的标识符,只有符合标识符的规则,可以随便写
+   -->
+  <insert id="insert">
+    INSERT INTO student	(SNAME, AGE, BIRTHDAY, SEX)	VALUES ('赵六1', 20, NOW(), '男')
+  </insert>
+  
+</mapper>

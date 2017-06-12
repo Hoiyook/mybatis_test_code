@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+
+<mapper namespace="cn.itheima.mapper.StudentMapper">
+  <!-- 声明了一个公有的SQL -->
+  <sql id="feild">
+     SNAME, AGE, BIRTHDAY, SEX
+  </sql>
+
+  <insert id="insert">
+    INSERT INTO student	(<include refid="feild"></include>)	VALUES (#{sname}, #{age}, #{birthday}, #{sex})
+  </insert>
+  
+  <!-- 批量插入 -->
+  <!-- foreach 一般用于处理,参数是一个集合或者数组的动态语句 -->
+  <insert id="batchInsert">
+    INSERT INTO student	(SNAME, AGE, BIRTHDAY, SEX)	VALUES 
+    <!-- 根据传递进来的记录数来决定插入的记录数 -->
+    <!-- 
+    collection:是类型
+    array,数组
+    list,集合
+    
+    item:设置每次循环返回的对象的变量名
+    close:设置循环拼接的结束字符
+    open:设置循环拼接的开始字符
+    separator:设置每次循环的分隔符
+     -->
+    <foreach collection="list" item="item"  separator="," >
+       (#{item.sname}, #{item.age}, #{item.birthday}, #{item.sex})
+    </foreach>
+
+  </insert>
+  
+  <!-- 删除 -->
+  <delete id="deleteById">
+    DELETE FROM student WHERE SID=#{sid}
+  </delete>
+  
+  <!-- 批量删除 -->
+<!--   <delete id="deleteByIds"> -->
+<!--        DELETE FROM student WHERE SID in ( -->
+<!--        <foreach collection="array" item="item"  separator=","> -->
+<!--           如果传递过来的不是pojo,只有一个值,直接使用循环声明返回的变量名 -->
+<!--           #{item} -->
+<!--        </foreach> -->
+<!--        ) -->
+<!--   </delete> -->
+  
+    <!-- 批量删除 -->
+  <delete id="deleteByIds">
+       DELETE FROM student WHERE SID in 
+       <foreach collection="array" open="(" item="item" close=")"  separator=",">
+          <!-- 如果传递过来的不是pojo,只有一个值,直接使用循环声明返回的变量名 -->
+          #{item}
+       </foreach>
+       
+  </delete>
+  
+
+  
+  <!-- 更新 -->
+  <update id="updateAllById">
+   UPDATE student	SET	SNAME=#{sname},	AGE=#{age},	BIRTHDAY=#{birthday},SEX=#{sex}	WHERE  SID=#{sid}
+  </update>
+  
+  <!--6.根据条件更新学生的信息,如果值为空就不更新 -->
+    <update id="updateNotNullById">
+   UPDATE student	
+   
+   <!-- set标签的好处就是将多余字符忽略 -->
+   <set >
+   <if test="sname!=null">
+   	   SNAME=#{sname},	
+   </if>
+   <if test="age!=null">
+        AGE=#{age},	
+   </if>
+   <if test="birthday!=null">
+      BIRTHDAY=#{birthday},
+   </if>
+   <if test="sex!=null">
+       SEX=#{sex},
+   </if>
+ 	</set>
+   
+   WHERE  SID=#{sid}
+  </update>
+  
+  <select resultType="cn.itheima.pojo.Student" id="selectAll">
+    SELECT <include refid="feild"></include>	FROM student
+  </select>
+  <!-- 模糊查询 -->
+  <select resultType="cn.itheima.pojo.Student" id="selectBySName">
+
+    
+    SELECT <include refid="feild"></include> FROM student where SNAME like  CONCAT('%',#{sname},'%') 
+  </select>
+  
+<!--   <select resultType="cn.itheima.pojo.Student"  id="selectByCondition"> -->
+<!--       SELECT * FROM student WHERE 1=1  -->
+<!--       注意事项:标签属性里面的参数不要加#{} -->
+<!--       <if test="sname!=null"> -->
+<!--         AND SNAME like concat('%',#{sname},'%') -->
+<!--       </if> -->
+<!--       <if test="age!=null"> -->
+<!--         AND AGE = #{age} -->
+<!--       </if> -->
+<!--       <if test="sex!=null"> -->
+<!--         AND SEX = #{sex}      -->
+<!--       </if> -->
+<!--       <if test="birthday!=null"> -->
+<!--         AND BIRTHDAY=#{birthday} -->
+<!--       </if> -->
+      
+      
+<!--   </select> -->
+  
+    <select resultType="cn.itheima.pojo.Student"  id="selectByCondition">
+      SELECT * FROM student 
+      <!-- <where>好处,如果条件都为空,是自动忽略where关键字 -->
+      <where>
+	      <!-- 注意事项:标签属性里面的参数不要加#{} -->
+	      <if test="sname!=null">
+	        AND SNAME like concat('%',#{sname},'%')
+	      </if>
+	      <if test="age!=null">
+	        AND AGE = #{age}
+	      </if>
+	      <if test="sex!=null">
+	        AND SEX = #{sex}     
+	      </if>
+	      <if test="birthday!=null">
+	        AND BIRTHDAY=#{birthday}
+	      </if>
+      
+      </where>
+      </select>
+      
+      
+     <select resultType="cn.itheima.pojo.Student"  id="selectByConditionChoose">
+      SELECT * FROM student 
+      <!-- <where>好处,如果条件都为空,是自动忽略where关键字 -->
+         <where>
+	      <!-- 注意事项:标签属性里面的参数不要加#{} -->
+	      <choose>
+	         <when test="sid!=null">
+	           AND SID=#{sid}
+	         </when>
+	         <when test="sname!=null">
+	           AND SNAME=#{sname} 
+	         </when>
+	         <when test="age!=null">
+	           AND AGE=#{age}
+	         </when>
+	         <when test="sex!=null">
+	           AND SEX=#{sex}
+	         </when>
+	         <otherwise>
+	            1=1
+	         </otherwise>
+	      </choose>
+      </where>
+      
+      
+  </select>
+  
+</mapper>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<!-- 
+namespace:命名空间就是一个文件的标识符,只有符合标识符的规则,可以随便写
+
+ -->
+<mapper namespace="studentDAO">
+
+  <!-- 插入操作 -->
+  <!-- 
+   id:是操作的标识符,只有符合标识符的规则,可以随便写
+   -->
+  <insert id="insert">
+    <!-- 
+    mybatis支持通过实体对象传递参数,参数的使用#{}来获得,
+    获得规则为:
+    #{}里面的值,要和实体对象的set\get方法一一对应, 如: sname 对应实体类的setSname()和getSname
+     -->
+    INSERT INTO student	(SNAME, AGE, BIRTHDAY, SEX)	VALUES (#{sname}, #{age}, #{birthday}, #{sex})
+  </insert>
+  
+  <!-- 删除 -->
+  <delete id="deleteById">
+    DELETE FROM student WHERE SID=#{sid}
+  </delete>
+  
+  <!-- 更新 -->
+  <update id="updateAllById">
+   UPDATE student	SET	SNAME=#{sname},	AGE=#{age},	BIRTHDAY=#{birthday},SEX=#{sex}	WHERE  SID=#{sid}
+  </update>
+  
+  <!-- 查询 -->
+  <!-- 查询必须指定返回的类型 -->
+  <!-- 
+    使用resultType指定,记录元素的类型
+   -->
+  <select resultType="cn.itheima.pojo.Student" id="selectAll">
+    SELECT *	FROM student
+  </select>
+  
+</mapper>
